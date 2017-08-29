@@ -3,8 +3,8 @@ language: python
 python:
   - 2.7
 install: "pip install -r requirements.txt"
-scripts: python -m unittest discover
+script: python -m unittest discover
 notifications:
   email:
     - patrickblanchard.dev@gmail.com
-...      
+...
