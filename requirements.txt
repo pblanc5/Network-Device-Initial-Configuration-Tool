@@ -1,2 +1,1 @@
-getpass
-pyYaml
+pyYaml==3.12
