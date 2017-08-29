@@ -1,0 +1,8 @@
+---
+console_server: "10.0.0.1"
+domain_name: "test.net"
+ios_interface:
+  - 41
+  - 42
+comware_interface:
+...
