@@ -6,28 +6,14 @@
 # Change Log
 ##################################################################
 # 08-31-17: pblanc5 "Create iosinterface"
+# 09-06-17: pblanc5 "ios_interface inherits from interface"
 
 import paramiko
+from interface import Interface
 import time
 import sys
 
-class IOSInterface():
-
-    def __init__(self, host, port, domain):
-        self.host = host
-        self.port = port
-        self.domain = domain
-        self.client = paramiko.SSHClient()
-
-    def __str__(self):
-        return self.host + "\n" + str(self.port) + "\n" + self.domain
-
-    def connect(self, user, passwd):
-        # Establishes connection with switch and emulates teminal session
-
-        self.client.set_missing_host_key_policy(paramiko.AutoAddPolicy)
-        self.client.connect(hostname=self.host, port=(3000 + self.port), username=user, password=passwd)
-        return self.client.invoke_shell()
+class IOSInterface(Interface):
 
     def enable(self, conn):
         conn.send('\r\n\r\n')
@@ -64,7 +50,6 @@ class IOSInterface():
         print conn.recv(5000)
         time.sleep(2)
 
-
     def configure_ssh(self, conn):
         # configure ssh settings
 
@@ -81,9 +66,6 @@ class IOSInterface():
         conn.send('exit\nexit\n')
         print conn.recv(5000)
         time.sleep(2)
-
-    def destroy_connection(self):
-        self.client.close()
 
     def update(self, user, passwd):
         try:

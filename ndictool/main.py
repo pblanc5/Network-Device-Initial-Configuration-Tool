@@ -1,15 +1,16 @@
 # Author: Patrick Blanchard
 # Contact: pblanc5@lsu.edu --or-- patrickblanchard.dev@gmail.com
-# Description: Entry point and command line interface of project
+# Description: Entry point of project
 #
 ##################################################################
 # Change Log
 ##################################################################
 # 08-29-17: pblanc5 "Add read_yaml and main"
 # 08-31-17: pblanc5 "Add iosinterface"
+# 09-06-17: pblanc5 "iosinterface -> ios_interface"
 
 import getpass
-import iosinterface
+import ios_interface
 import yaml
 import sys
 
@@ -20,8 +21,6 @@ def read_yaml(conf_file):
         with open(conf_file) as f:
             return yaml.load(f)
     except Exception as inst:
-        print type(inst)
-        print inst.args
         print inst
         exit(1)
 
@@ -41,7 +40,7 @@ def main():
     ios_interface_list = CONF["ios_interface"]
 
     for interface in ios_interface_list:
-        IOS_INT = iosinterface.IOSInterface(console_server, interface, domain_name)
+        IOS_INT = ios_interface.IOSInterface(console_server, interface, domain_name)
         print IOS_INT
         IOS_INT.update(USER, PASS)
 
