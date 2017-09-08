@@ -7,6 +7,7 @@
 ##################################################################
 # 08-31-17: pblanc5 "Create iosinterface"
 # 09-06-17: pblanc5 "ios_interface inherits from interface"
+# 09-08-17: pblanc5 "Fix ssh commands, now works with Gigabit Cisco switches"
 
 import paramiko
 from interface import Interface
@@ -42,10 +43,13 @@ class IOSInterface(Interface):
         time.sleep(1)
         conn.send('interface vlan 1\n')
         conn.send('ip address 10.0.0.' + str(self.port) + ' 255.255.255.0\n')
+        time.sleep(1)
         conn.send('exit\n')
+        conn.send('ip default-gateway 10.0.0.1\n')
         time.sleep(1)
         conn.send('interface Gi 1/0/1\n')
         conn.send('no shutdown\n')
+        time.sleep(1)
         conn.send('exit\n')
         print conn.recv(5000)
         time.sleep(2)
@@ -54,17 +58,22 @@ class IOSInterface(Interface):
         # configure ssh settings
 
         conn.send('\r\n\r\n')
-        conn.send('configure terminal\n')
         conn.send('hostname switch-' + str(self.port) + '\n')
         conn.send('ip domain-name ' + self.domain + '\n')
-        conn.send('crypto key generate rsa modulus 1024\n')
+        time.sleep(1)
+        conn.send('enable secret password\n')
+        conn.send('crypto key generate rsa\n')
+        time.sleep(3)
+        conn.send('1024\n')
         time.sleep(3)
         conn.send('aaa new-model\n')
         conn.send('username admin priv 15 secret password\n')
+        time.sleep(1)
         conn.send('line vty 0 15\n')
         conn.send('transport input ssh\n')
+        time.sleep(1)
         conn.send('exit\nexit\n')
-        print conn.recv(5000)
+        print conn.recv(10000)
         time.sleep(2)
 
     def update(self, user, passwd):
